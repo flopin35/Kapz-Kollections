@@ -18,7 +18,7 @@ const isDev = false;
 // Check if logged in
 // ============================================
 if (!localStorage.getItem("adminLoggedIn") && !window.location.href.includes("index.html")) {
-    window.location.href = "index.html";
+    window.location.href = "/admin/";
 }
 
 // ============================================
@@ -47,7 +47,7 @@ window.switchTab = switchTab;
 // ============================================
 window.logout = function() {
     localStorage.removeItem("adminLoggedIn");
-    window.location.href = "index.html";
+    window.location.href = "/admin/";
 }
 
 // ============================================
@@ -589,7 +589,7 @@ window.handleImageUpload = function(input) {
 // PREVIEW
 // ============================================
 window.openMainSite = function() {
-    window.open("../Main web/index.html", "_blank");
+    window.open("/", "_blank");
 }
 
 window.refreshPreview = function() {

@@ -94,7 +94,7 @@
     <script>
         // Check if already logged in
         if (localStorage.getItem("adminLoggedIn") === "true") {
-            window.location.href = "dashboard.html";
+            window.location.href = "/admin/dashboard.html";
         }
 
         // Hide default hint if custom password is set
@@ -121,7 +121,7 @@
                     btn.classList.add("success");
                     localStorage.setItem("adminLoggedIn", "true");
                     setTimeout(() => {
-                        window.location.href = "dashboard.html";
+                        window.location.href = "/admin/dashboard.html";
                     }, 500);
                 } else {
                     btn.innerHTML = '<span>Login to Dashboard</span><span class="btn-arrow">→</span>';
