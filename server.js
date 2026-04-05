@@ -13,37 +13,55 @@ const mimeTypes = {
     '.jpg': 'image/jpeg',
     '.jpeg': 'image/jpeg',
     '.svg': 'image/svg+xml',
-    '.ico': 'image/x-icon'
+    '.ico': 'image/x-icon',
+    '.woff': 'font/woff',
+    '.woff2': 'font/woff2'
 };
 
 const server = http.createServer((req, res) => {
-    let filePath = req.url === '/' ? '/Main web/index.html' : req.url;
+    // Decode URL (handle spaces in filenames)
+    let urlPath = decodeURIComponent(req.url.split('?')[0]);
+    
+    let filePath;
     
     // Handle admin routes
-    if (filePath === '/admin' || filePath === '/admin/') {
-        filePath = '/Admin panel/index.html';
-    } else if (filePath.startsWith('/admin/')) {
-        filePath = '/Admin panel/' + filePath.slice(7);
+    if (urlPath === '/admin' || urlPath === '/admin/') {
+        filePath = path.join(__dirname, 'Admin panel', 'index.html');
+    } else if (urlPath.startsWith('/admin/')) {
+        filePath = path.join(__dirname, 'Admin panel', urlPath.slice(7));
+    } else if (urlPath === '/' || urlPath === '/index.html') {
+        filePath = path.join(__dirname, 'Main web', 'index.html');
+    } else {
+        // Check if file exists in Main web folder first
+        const mainWebPath = path.join(__dirname, 'Main web', urlPath);
+        const rootPath = path.join(__dirname, urlPath);
+        
+        if (fs.existsSync(mainWebPath)) {
+            filePath = mainWebPath;
+        } else if (fs.existsSync(rootPath)) {
+            filePath = rootPath;
+        } else {
+            filePath = mainWebPath; // Default to Main web
+        }
     }
     
-    // Decode URL (handle spaces in filenames)
-    filePath = decodeURIComponent(filePath);
-    
-    const fullPath = path.join(__dirname, filePath);
-    const ext = path.extname(fullPath).toLowerCase();
+    const ext = path.extname(filePath).toLowerCase();
     const contentType = mimeTypes[ext] || 'application/octet-stream';
 
-    fs.readFile(fullPath, (err, content) => {
+    fs.readFile(filePath, (err, content) => {
         if (err) {
             if (err.code === 'ENOENT') {
                 res.writeHead(404);
-                res.end('File not found');
+                res.end('File not found: ' + urlPath);
             } else {
                 res.writeHead(500);
                 res.end('Server error');
             }
         } else {
-            res.writeHead(200, { 'Content-Type': contentType });
+            res.writeHead(200, { 
+                'Content-Type': contentType,
+                'Cache-Control': 'public, max-age=3600'
+            });
             res.end(content);
         }
     });
