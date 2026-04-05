@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Kapz Kollections</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='80' fill='%23020617'/><rect x='140' y='110' width='60' height='292' rx='12' fill='%2322c55e'/><polygon points='200,256 330,110 400,110 230,270 200,256' fill='%2322c55e'/><polygon points='230,270 400,402 330,402 200,270' fill='%2322c55e'/></svg>">
+    
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>⚡ Admin Panel</h2>
+            <p>Kapz Kollections</p>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" data-tab="dashboard">📊 Dashboard</a>
+            <a href="#" class="nav-item" data-tab="settings">⚙️ Settings</a>
+            <a href="#" class="nav-item" data-tab="products">🛍️ Products</a>
+            <a href="#" class="nav-item" data-tab="preview">👁️ Preview</a>
+            <a href="#" class="nav-item" data-tab="security">🔐 Security</a>
+            <a href="#" class="nav-item" data-tab="backup">💾 Backup</a>
+        </nav>
+        <button class="btn logout" onclick="logout()">🚪 Logout</button>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        
+        <!-- Dashboard Tab (NEW) -->
+        <section id="dashboard" class="tab-content active">
+            <div class="tab-header">
+                <h1>📊 Dashboard Overview</h1>
+                <p>Quick stats and recent activity</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">🛍️</div>
+                    <div class="stat-info">
+                        <h3 id="totalProducts">0</h3>
+                        <p>Total Products</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-info">
+                        <h3 id="avgPrice">GHS 0</h3>
+                        <p>Average Price</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-info">
+                        <h3 id="lastUpdated">Never</h3>
+                        <p>Last Updated</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-info">
+                        <h3 id="siteStatus">Active</h3>
+                        <p>Site Status</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <h3>⚡ Quick Actions</h3>
+                <div class="action-buttons">
+                    <button class="btn primary" onclick="switchTab('products')">➕ Add Product</button>
+                    <button class="btn secondary" onclick="switchTab('settings')">⚙️ Edit Settings</button>
+                    <button class="btn secondary" onclick="openMainSite()">🌐 View Site</button>
+                    <button class="btn secondary" onclick="switchTab('backup')">💾 Backup Data</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📝 Recent Products</h3>
+                <div id="recentProducts" class="recent-list">
+                    <!-- Recent products will be loaded here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Settings Tab -->
+        <section id="settings" class="tab-content">
+            <div class="tab-header">
+                <h1>⚙️ Business Settings</h1>
+                <p>Edit your business information</p>
+            </div>
+
+            <div class="settings-grid">
+                <!-- Business Info -->
+                <div class="card">
+                    <h3>📋 Business Information</h3>
+                    <div class="input-group">
+                        <label>Business Name</label>
+                        <input type="text" id="businessName" placeholder="Kapz Kollections">
+                    </div>
+                    <div class="input-group">
+                        <label>Tagline / Subtitle</label>
+                        <input type="text" id="tagline" placeholder="Sports Apparel & Sneakers Delivered Fast">
+                    </div>
+                    <div class="input-group">
+                        <label>About / Description</label>
+                        <textarea id="aboutText" rows="3" placeholder="Tell customers about your business..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="card">
+                    <h3>📞 Contact Information</h3>
+                    <div class="input-group">
+                        <label>Phone Number 1</label>
+                        <input type="text" id="phone1" placeholder="055 673 4640">
+                    </div>
+                    <div class="input-group">
+                        <label>Phone Number 2</label>
+                        <input type="text" id="phone2" placeholder="024 683 7269">
+                    </div>
+                    <div class="input-group">
+                        <label>WhatsApp Number (with country code)</label>
+                        <input type="text" id="whatsapp" placeholder="233556734640">
+                    </div>
+                    <div class="input-group">
+                        <label>Email Address</label>
+                        <input type="email" id="email" placeholder="info@kapzkollections.com">
+                    </div>
+                </div>
+
+                <!-- Location -->
+                <div class="card">
+                    <h3>📍 Location</h3>
+                    <div class="input-group">
+                        <label>Address</label>
+                        <input type="text" id="address" placeholder="Shell Signboard, Spintex">
+                    </div>
+                    <div class="input-group">
+                        <label>City / Region</label>
+                        <input type="text" id="city" placeholder="Accra, Ghana">
+                    </div>
+                    <div class="input-group">
+                        <label>Google Maps Embed URL (optional)</label>
+                        <input type="text" id="mapUrl" placeholder="https://www.google.com/maps/embed?...">
+                    </div>
+                </div>
+
+                <!-- Social Media -->
+                <div class="card">
+                    <h3>📱 Social Media</h3>
+                    <div class="input-group">
+                        <label>Instagram URL</label>
+                        <input type="text" id="instagram" placeholder="https://instagram.com/kapzkollections">
+                    </div>
+                    <div class="input-group">
+                        <label>Facebook URL</label>
+                        <input type="text" id="facebook" placeholder="https://facebook.com/kapzkollections">
+                    </div>
+                    <div class="input-group">
+                        <label>TikTok URL</label>
+                        <input type="text" id="tiktok" placeholder="https://tiktok.com/@kapzkollections">
+                    </div>
+                    <div class="input-group">
+                        <label>Twitter/X URL</label>
+                        <input type="text" id="twitter" placeholder="https://twitter.com/kapzkollections">
+                    </div>
+                </div>
+
+                <!-- Branding -->
+                <div class="card">
+                    <h3>🎨 Branding</h3>
+                    <div class="input-group">
+                        <label>Logo URL</label>
+                        <input type="text" id="logoUrl" placeholder="https://example.com/logo.png">
+                    </div>
+                    <div class="input-group">
+                        <label>Or Upload Logo</label>
+                        <input type="file" id="logoFile" accept="image/*" onchange="handleLogoUpload(this)">
+                    </div>
+                    <div class="input-group">
+                        <label>Favicon URL</label>
+                        <input type="text" id="faviconUrl" placeholder="https://example.com/favicon.png">
+                    </div>
+                    <div class="input-group">
+                        <label>Primary Color</label>
+                        <input type="color" id="primaryColor" value="#22c55e">
+                    </div>
+                </div>
+
+                <!-- Business Hours -->
+                <div class="card">
+                    <h3>🕐 Business Hours</h3>
+                    <div class="input-group">
+                        <label>Opening Hours</label>
+                        <input type="text" id="openingHours" placeholder="Mon - Sat: 9:00 AM - 7:00 PM">
+                    </div>
+                    <div class="input-group">
+                        <label>Closed Days</label>
+                        <input type="text" id="closedDays" placeholder="Sundays">
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn primary save-btn" onclick="saveSettings()">💾 Save All Settings</button>
+        </section>
+
+        <!-- Products Tab -->
+        <section id="products" class="tab-content">
+            <div class="tab-header">
+                <h1>🛍️ Products</h1>
+                <p>Manage your product catalog</p>
+            </div>
+
+            <!-- Add Product Form -->
+            <div class="card add-product-card">
+                <h3>➕ Add New Product</h3>
+                <div class="add-product-form">
+                    <div class="input-group">
+                        <label>Product Name</label>
+                        <input type="text" id="productName" placeholder="Nike Air Max">
+                    </div>
+                    <div class="input-group">
+                        <label>Price (GHS)</label>
+                        <input type="number" id="productPrice" placeholder="250">
+                    </div>
+                    <div class="input-group">
+                        <label>Category</label>
+                        <select id="productCategory">
+                            <option value="Sneakers">Sneakers</option>
+                            <option value="Jerseys">Jerseys</option>
+                            <option value="Sportswear">Sportswear</option>
+                            <option value="Accessories">Accessories</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Description (optional)</label>
+                        <input type="text" id="productDescription" placeholder="Brief description...">
+                    </div>
+                    <div class="input-group">
+                        <label>Image URL</label>
+                        <input type="text" id="productImage" placeholder="https://example.com/image.jpg">
+                    </div>
+                    <div class="input-group">
+                        <label>Or Upload Image</label>
+                        <input type="file" id="productImageFile" accept="image/*" onchange="handleImageUpload(this)">
+                    </div>
+                    <button class="btn primary" onclick="addProduct()">➕ Add Product</button>
+                </div>
+            </div>
+
+            <!-- Filter Products -->
+            <div class="card filter-card">
+                <div class="filter-row">
+                    <div class="input-group">
+                        <label>🔍 Search Products</label>
+                        <input type="text" id="searchProducts" placeholder="Search by name..." oninput="filterProducts()">
+                    </div>
+                    <div class="input-group">
+                        <label>📁 Filter by Category</label>
+                        <select id="filterCategory" onchange="filterProducts()">
+                            <option value="all">All Categories</option>
+                            <option value="Sneakers">Sneakers</option>
+                            <option value="Jerseys">Jerseys</option>
+                            <option value="Sportswear">Sportswear</option>
+                            <option value="Accessories">Accessories</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products List -->
+            <div class="card">
+                <h3>📦 Your Products (<span id="productCount">0</span>)</h3>
+                <div id="productsList" class="products-grid">
+                    <!-- Products will be loaded here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Preview Tab -->
+        <section id="preview" class="tab-content">
+            <div class="tab-header">
+                <h1>👁️ Preview</h1>
+                <p>See how your site looks</p>
+            </div>
+            <div class="card preview-card">
+                <div class="preview-actions">
+                    <button class="btn primary" onclick="openMainSite()">🌐 Open in New Tab</button>
+                    <button class="btn secondary" onclick="refreshPreview()">🔄 Refresh Preview</button>
+                </div>
+                <p class="preview-note">💡 Changes will appear after saving settings or products.</p>
+                <div class="preview-frame">
+                    <iframe id="previewFrame" src="../Main web/index.html"></iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- Security Tab -->
+        <section id="security" class="tab-content">
+            <div class="tab-header">
+                <h1>🔐 Security Settings</h1>
+                <p>Manage your admin password</p>
+            </div>
+
+            <div class="security-grid">
+                <div class="card">
+                    <h3>🔑 Change Password</h3>
+                    <p>Set a new password for your admin panel. Make sure to remember it!</p>
+                    
+                    <div class="input-group">
+                        <label>Current Password</label>
+                        <input type="password" id="currentPassword" placeholder="Enter current password">
+                    </div>
+                    <div class="input-group">
+                        <label>New Password</label>
+                        <input type="password" id="newPassword" placeholder="Enter new password">
+                    </div>
+                    <div class="input-group">
+                        <label>Confirm New Password</label>
+                        <input type="password" id="confirmPassword" placeholder="Confirm new password">
+                    </div>
+                    
+                    <button class="btn primary" onclick="changePassword()">🔐 Update Password</button>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Password Requirements</h3>
+                    <ul class="requirements-list">
+                        <li>✅ At least 4 characters long</li>
+                        <li>✅ Can contain letters, numbers, and symbols</li>
+                        <li>✅ Case sensitive</li>
+                        <li>⚠️ Write it down somewhere safe!</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>🔄 Reset to Default</h3>
+                    <p>If you forget your password, you can reset it to the default (1234).</p>
+                    <p class="warning">⚠️ This will require clearing your browser data for this site.</p>
+                    <button class="btn secondary" onclick="showResetInstructions()">📖 Show Reset Instructions</button>
+                </div>
+
+                <div class="card password-status-card">
+                    <h3>📊 Password Status</h3>
+                    <div class="status-item">
+                        <span>Password Type:</span>
+                        <span id="passwordType" class="status-badge">Default</span>
+                    </div>
+                    <div class="status-item">
+                        <span>Last Changed:</span>
+                        <span id="passwordLastChanged">Never</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Backup Tab (NEW) -->
+        <section id="backup" class="tab-content">
+            <div class="tab-header">
+                <h1>💾 Backup & Restore</h1>
+                <p>Export or import your data</p>
+            </div>
+
+            <div class="backup-grid">
+                <div class="card">
+                    <h3>📤 Export Data</h3>
+                    <p>Download all your settings and products as a backup file.</p>
+                    <button class="btn primary" onclick="exportData()">⬇️ Download Backup</button>
+                </div>
+
+                <div class="card">
+                    <h3>📥 Import Data</h3>
+                    <p>Restore settings and products from a backup file.</p>
+                    <input type="file" id="importFile" accept=".json" onchange="importData(this)">
+                    <p class="warning">⚠️ This will overwrite your current data!</p>
+                </div>
+
+                <div class="card">
+                    <h3>🗑️ Reset All Data</h3>
+                    <p>Clear all settings and products. This cannot be undone!</p>
+                    <button class="btn danger" onclick="resetAllData()">🗑️ Reset Everything</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Edit Product Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>✏️ Edit Product</h2>
+                <button class="modal-close" onclick="closeEditModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editIndex">
+                <div class="input-group">
+                    <label>Product Name</label>
+                    <input type="text" id="editName">
+                </div>
+                <div class="input-group">
+                    <label>Price (GHS)</label>
+                    <input type="number" id="editPrice">
+                </div>
+                <div class="input-group">
+                    <label>Category</label>
+                    <select id="editCategory">
+                        <option value="Sneakers">Sneakers</option>
+                        <option value="Jerseys">Jerseys</option>
+                        <option value="Sportswear">Sportswear</option>
+                        <option value="Accessories">Accessories</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Description</label>
+                    <input type="text" id="editDescription">
+                </div>
+                <div class="input-group">
+                    <label>Image URL</label>
+                    <input type="text" id="editImage">
+                </div>
+                <div class="input-group">
+                    <label>Or Upload New Image</label>
+                    <input type="file" accept="image/*" onchange="handleEditImageUpload(this)">
+                </div>
+                <div class="image-preview">
+                    <img id="editImagePreview" src="" alt="Preview">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn secondary" onclick="closeEditModal()">Cancel</button>
+                <button class="btn primary" onclick="saveEditProduct()">💾 Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+
+</body>
+</html>

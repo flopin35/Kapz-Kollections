@@ -1,0 +1,12 @@
+{
+  "name": "kapz-kollections",
+  "version": "2.0.0",
+  "description": "Kapz Kollections - Sports Apparel & Sneakers",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

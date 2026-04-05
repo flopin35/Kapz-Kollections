@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Kapz Kollections</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='80' fill='%23020617'/><rect x='140' y='110' width='60' height='292' rx='12' fill='%2322c55e'/><polygon points='200,256 330,110 400,110 230,270 200,256' fill='%2322c55e'/><polygon points='230,270 400,402 330,402 200,270' fill='%2322c55e'/></svg>">
+    
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="login-page">
+
+    <!-- Animated Background -->
+    <div class="login-bg">
+        <div class="bg-shape shape-1"></div>
+        <div class="bg-shape shape-2"></div>
+        <div class="bg-shape shape-3"></div>
+        <div class="bg-shape shape-4"></div>
+    </div>
+
+    <div class="login-container">
+        <!-- Left Side - Branding -->
+        <div class="login-branding">
+            <div class="brand-content">
+                <div class="brand-logo">⚡</div>
+                <h1>Kapz Kollections</h1>
+                <p>Admin Dashboard</p>
+                <div class="brand-features">
+                    <div class="feature">
+                        <span class="feature-icon">�️</span>
+                        <span>Manage Products</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">⚙️</span>
+                        <span>Site Settings</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">📊</span>
+                        <span>Dashboard Analytics</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">💾</span>
+                        <span>Backup & Export</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Login Form -->
+        <div class="login-form-section">
+            <div class="login-box">
+                <div class="login-header">
+                    <div class="login-icon">🔐</div>
+                    <h2>Welcome Back</h2>
+                    <p>Enter your password to access the admin panel</p>
+                </div>
+                
+                <form onsubmit="login(event)">
+                    <div class="input-group">
+                        <label>
+                            <span class="label-icon">🔑</span>
+                            Password
+                        </label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="password" placeholder="Enter your password" required>
+                            <button type="button" class="toggle-password" onclick="togglePassword()">👁️</button>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn primary login-btn">
+                        <span>Login to Dashboard</span>
+                        <span class="btn-arrow">→</span>
+                    </button>
+                </form>
+                
+                <p class="hint" id="defaultHint">
+                    <span class="hint-icon">💡</span>
+                    Default password: <strong>1234</strong>
+                </p>
+
+                <div class="login-footer">
+                    <p>Secure Admin Access</p>
+                    <div class="security-badges">
+                        <span>🔒 Encrypted</span>
+                        <span>✅ Secure</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check if already logged in
+        if (localStorage.getItem("adminLoggedIn") === "true") {
+            window.location.href = "dashboard.html";
+        }
+
+        // Hide default hint if custom password is set
+        const customPassword = localStorage.getItem("adminPassword");
+        if (customPassword) {
+            document.getElementById("defaultHint").style.display = "none";
+        }
+
+        function login(e) {
+            e.preventDefault();
+            const password = document.getElementById("password").value;
+            const btn = document.querySelector(".login-btn");
+            
+            // Get custom password or use default
+            const storedPassword = localStorage.getItem("adminPassword") || "1234";
+
+            // Add loading state
+            btn.innerHTML = '<span>Verifying...</span><span class="btn-spinner">⏳</span>';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                if (password === storedPassword) {
+                    btn.innerHTML = '<span>Success!</span><span class="btn-arrow">✓</span>';
+                    btn.classList.add("success");
+                    localStorage.setItem("adminLoggedIn", "true");
+                    setTimeout(() => {
+                        window.location.href = "dashboard.html";
+                    }, 500);
+                } else {
+                    btn.innerHTML = '<span>Login to Dashboard</span><span class="btn-arrow">→</span>';
+                    btn.disabled = false;
+                    
+                    // Shake animation
+                    const box = document.querySelector(".login-box");
+                    box.classList.add("shake");
+                    setTimeout(() => box.classList.remove("shake"), 500);
+                    
+                    // Show error
+                    showError("Wrong password! Please try again.");
+                }
+            }, 800);
+        }
+
+        function togglePassword() {
+            const input = document.getElementById("password");
+            const btn = document.querySelector(".toggle-password");
+            if (input.type === "password") {
+                input.type = "text";
+                btn.textContent = "🙈";
+            } else {
+                input.type = "password";
+                btn.textContent = "👁️";
+            }
+        }
+
+        function showError(message) {
+            // Remove existing error
+            const existing = document.querySelector(".error-toast");
+            if (existing) existing.remove();
+
+            const toast = document.createElement("div");
+            toast.className = "error-toast";
+            toast.innerHTML = `<span>❌</span> ${message}`;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add("show");
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.remove("show");
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    </script>
+
+</body>
+</html>
