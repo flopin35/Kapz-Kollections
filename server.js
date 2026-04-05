@@ -22,27 +22,27 @@ const server = http.createServer((req, res) => {
     // Decode URL (handle spaces in filenames)
     let urlPath = decodeURIComponent(req.url.split('?')[0]);
     
+    // Get referer to determine context (admin vs main)
+    const referer = req.headers.referer || '';
+    const isAdminContext = referer.includes('/admin');
+    
     let filePath;
     
     // Handle admin routes
     if (urlPath === '/admin' || urlPath === '/admin/') {
         filePath = path.join(__dirname, 'Admin panel', 'index.html');
     } else if (urlPath.startsWith('/admin/')) {
-        filePath = path.join(__dirname, 'Admin panel', urlPath.slice(7));
+        // Remove /admin/ prefix and serve from Admin panel folder
+        const adminFile = urlPath.slice(7);
+        filePath = path.join(__dirname, 'Admin panel', adminFile);
     } else if (urlPath === '/' || urlPath === '/index.html') {
         filePath = path.join(__dirname, 'Main web', 'index.html');
+    } else if (isAdminContext && !urlPath.startsWith('/Main')) {
+        // Request from admin page - serve from Admin panel
+        filePath = path.join(__dirname, 'Admin panel', urlPath);
     } else {
-        // Check if file exists in Main web folder first
-        const mainWebPath = path.join(__dirname, 'Main web', urlPath);
-        const rootPath = path.join(__dirname, urlPath);
-        
-        if (fs.existsSync(mainWebPath)) {
-            filePath = mainWebPath;
-        } else if (fs.existsSync(rootPath)) {
-            filePath = rootPath;
-        } else {
-            filePath = mainWebPath; // Default to Main web
-        }
+        // All other files come from Main web folder
+        filePath = path.join(__dirname, 'Main web', urlPath);
     }
     
     const ext = path.extname(filePath).toLowerCase();
